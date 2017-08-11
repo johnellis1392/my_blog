@@ -1,0 +1,81 @@
+version: '3.3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      PORT: 3000
+      # NOTE: POSTGRES_USER is defaulted to the image's name
+      # POSTGRES_USER: pg
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dev
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+
+    depends_on:
+      - postgres
+
+    ports:
+      - 3000:3000/tcp
+
+    volumes:
+      - .:/usr/src/app
+
+    networks:
+      - data
+
+  postgres:
+    image: postgres:alpine
+    environment:
+      # NOTE: This user declaration didn't work for some reason
+      # POSTGRES_USER: pg
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dev
+      PGDATA: /var/lib/postgresql/data
+
+    # ports:
+    #   - 5432:5432/tcp
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_logs:/var/log/postgresql
+      - postgres_configs:/etc/postgresql
+
+    networks:
+      - data
+
+  # redis:
+  #   image: redis:alpine
+  #
+  #   # environment:
+  #
+  #   # ports:
+  #   #   - 6379:6379/tcp
+  #
+  #   command: redis-server --appendonly yes
+  #
+  #   volumes:
+  #     - redis_data:/var/lib/redis
+  #
+  #   networks:
+  #     - data
+
+
+
+volumes:
+  postgres_data:
+    driver: local
+  postgres_logs:
+    driver: local
+  postgres_configs:
+    driver: local
+
+  redis_data:
+    driver: local
+
+networks:
+  data:
