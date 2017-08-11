@@ -7,6 +7,7 @@ require 'rspec/rails'
 
 # For cleaning database after use
 require 'database_cleaner'
+require 'pundit/rspec'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
@@ -33,6 +34,7 @@ RSpec.configure do |config|
   # Include json_helper module for request tests
   config.include RequestHelper, type: :request
   config.include RequestHelper, type: :controller
+  config.include RequestHelper, type: :policy
 
   config.before(:suite) do
     # Clean database

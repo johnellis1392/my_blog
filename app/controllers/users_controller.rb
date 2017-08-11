@@ -6,6 +6,7 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
+    skip_authorization
     @users = User.all
 
     render json: @users
@@ -13,12 +14,14 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
+    skip_authorization
     render json: @user
   end
 
   # POST /users
   def create
     @user = User.new(user_params)
+    authorize @user
 
     if @user.save
       render json: @user, status: :created, location: @user
@@ -29,6 +32,7 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   def update
+    authorize @user
     if @user.update(user_params)
       render json: @user
     else
@@ -38,6 +42,7 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   def destroy
+    authorize @user
     @user.destroy
   end
 

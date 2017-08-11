@@ -3,10 +3,12 @@ class Posts::CommentsController < ApplicationController
   before_action :set_comment, only: [:show]
 
   def index
+    skip_authorization
     render json: @post.comments
   end
 
   def show
+    skip_authorization
     render json: @comment
   end
 

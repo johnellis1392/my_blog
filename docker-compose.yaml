@@ -5,6 +5,11 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - 3000:3000/tcp
     environment:
       PORT: 3000
       # NOTE: POSTGRES_USER is defaulted to the image's name
@@ -15,11 +20,10 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
 
-    depends_on:
-      - postgres
-
-    ports:
-      - 3000:3000/tcp
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      REDIS_NAMESPACE: "myblog_app"
 
     volumes:
       - .:/usr/src/app
@@ -29,6 +33,8 @@ services:
 
   postgres:
     image: postgres:alpine
+    ports:
+      - 5432:5432/tcp
     environment:
       # NOTE: This user declaration didn't work for some reason
       # POSTGRES_USER: pg
@@ -36,9 +42,6 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: dev
       PGDATA: /var/lib/postgresql/data
-
-    # ports:
-    #   - 5432:5432/tcp
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -48,21 +51,18 @@ services:
     networks:
       - data
 
-  # redis:
-  #   image: redis:alpine
-  #
-  #   # environment:
-  #
-  #   # ports:
-  #   #   - 6379:6379/tcp
-  #
-  #   command: redis-server --appendonly yes
-  #
-  #   volumes:
-  #     - redis_data:/var/lib/redis
-  #
-  #   networks:
-  #     - data
+  redis:
+    image: redis:alpine
+    command: redis-server --appendonly yes
+    ports:
+      - 6379:6379/tcp
+
+    volumes:
+      # - redis_data:/var/lib/redis
+      - redis_data:/data
+
+    networks:
+      - data
 
 
 

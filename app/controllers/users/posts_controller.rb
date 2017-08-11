@@ -3,10 +3,12 @@ class Users::PostsController < ApplicationController
   before_action :set_post, only: [:show]
 
   def index
+    skip_authorization
     render json: @user.posts
   end
 
   def show
+    skip_authorization
     render json: @post
   end
 

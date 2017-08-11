@@ -56,4 +56,9 @@ Rails.application.routes.draw do
   # Route for fetching token for authentication
   get :token, controller: 'application'
   get :reauth, controller: 'application'
+  # get :quote_of_the_day, controller: 'application'
+  # post :set_quote, controller: 'application'
+
+  # Redirect to posts list
+  root to: 'posts#index'
 end
