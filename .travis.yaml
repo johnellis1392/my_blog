@@ -1,0 +1,9 @@
+language: ruby
+rvm:
+  - 2.2
+  - jruby
+  - rbx-2
+
+sudo: false
+dist: trusty
+
